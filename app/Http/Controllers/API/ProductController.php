@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
 use App\Interfaces\ProductRepositoryInterface;
 use App\Traits\RequestResponse;
 use Illuminate\Http\Request;
@@ -24,7 +25,7 @@ class ProductController extends Controller
             return $this->errorResponse($th->getMessage());
         }
     }
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
         try {
             $details = [

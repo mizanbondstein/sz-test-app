@@ -2,18 +2,17 @@
 
 namespace App\Http\Requests;
 
-use App\Traits\RequestResponse;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Support\Facades\Validator;
 
-class StoreProductRequest extends FormRequest
+class LoginRequest extends FormRequest
 {
-    use RequestResponse;
     /**
      * Determine if the user is authorized to make this request.
+     *
+     * @return bool
      */
-    public function authorize(): bool
+    public function authorize()
     {
         return true;
     }
@@ -21,16 +20,21 @@ class StoreProductRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
+     * @return array
      */
     public function rules()
     {
         return [
-            'name' => ['required', 'min:3'],
-            'price' => ['required','numeric'],
-            'description' => ['required'],
-            'image' => 'required|image|mimes:jpg,jpeg,png,gif,svg|max:2048',
-            'category_id' => ['required'],
+            'email' => 'required',
+            'password' => 'required',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'email.required' => 'The email field is required',
+            'password.required' => 'The password field is required',
         ];
     }
 

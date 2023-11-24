@@ -23,7 +23,7 @@ class ProductRepository implements ProductRepositoryInterface
         } else {
             $products->orderBy('created_at', 'desc');
         }
-        return $products->get();
+        return $products->with('category')->get();
     }
     public function create($details)
     {

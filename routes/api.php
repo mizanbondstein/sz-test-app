@@ -18,11 +18,11 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['prefix' => 'v1'], function () {
     Route::post('login', [AuthenticateController::class, 'login']);
-    // Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('logout', [AuthenticateController::class, 'logout']);
         Route::apiResource('products', ProductController::class);
         Route::apiResource('categories', ProductController::class);
-    // });
+    });
 });
 // Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 //     return $request->user();

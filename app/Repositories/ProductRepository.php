@@ -27,17 +27,21 @@ class ProductRepository implements ProductRepositoryInterface
     }
     public function create($details)
     {
-        $product = Product::create($details->toArray());
-        if ($details->has('image')) {
-            $image = $details->file('image');
+        $product = Product::create($details);
+        if (is_array($details) && array_key_exists('image', $details)) {
+            $image = $details['image'];
             $input['img_url'] = time() . '.' . $image->getClientOriginalExtension();
             $destinationPath = public_path('/images/product');
-            if (!Storage::exists($destinationPath)) Storage::disk('public')->makeDirectory($destinationPath);
+
+            if (!Storage::exists($destinationPath)) {
+                Storage::disk('public')->makeDirectory($destinationPath);
+            }
             $image->move($destinationPath, $input['img_url']);
             $product->update([
                 'image' => $input['img_url']
             ]);
         }
+
         return $product->refresh();
     }
 }

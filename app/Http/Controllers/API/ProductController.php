@@ -27,7 +27,14 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         try {
-            $product = $this->productRepository->create($request);
+            $details = [
+                'name' => $request->name,
+                'price' =>  $request->price,
+                'description' => $request->description,
+                'category_id' => $request->category_id,
+                'image' => $request->image
+            ];
+            $product = $this->productRepository->create($details);
             return $this->successResponse('Product List', $product);
         } catch (\Throwable $th) {
             return $this->errorResponse($th->getMessage());

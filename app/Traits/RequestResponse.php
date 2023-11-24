@@ -20,4 +20,15 @@ trait RequestResponse
             'data' => $data
         ], 500);
     }
+    public function failedResponse($errors)
+    {
+        return response()->json([
+            'status' => false,
+            'message' => 'Validation failed!',
+            'data' => [
+                'errors' =>  $errors
+            ]
+        ], 422);
+    }
+
 }

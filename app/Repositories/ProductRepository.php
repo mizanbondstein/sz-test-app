@@ -1,21 +1,43 @@
 <?php
 
+namespace App\Repositories;
+
 use App\Interfaces\ProductRepositoryInterface;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 class ProductRepository implements ProductRepositoryInterface
 {
-    public function list()
-    {
-        return Product::all();
-    }
 
-    public function findById(int $productId)
+    public function list($params = null)
     {
-        return Product::query()->findOrFail($productId);
+        $products = Product::query();
+        if (!empty($params->category)) {
+            $category = $params->category;
+            $products->whereHas('category', function ($query) use ($category) {
+                $query->where('id', $category);
+            });
+        }
+        if (!empty($params->sort_by_price)) {
+            $products->orderBy('price', $params['sort_by_price']);
+        } else {
+            $products->orderBy('created_at', 'desc');
+        }
+        return $products->get();
     }
-    public function create(array $details)
+    public function create($details)
     {
-        return Product::create($details);
+        $product = Product::create($details->toArray());
+        if ($details->has('image')) {
+            $image = $details->file('image');
+            $input['img_url'] = time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('/images/product');
+            if (!Storage::exists($destinationPath)) Storage::disk('public')->makeDirectory($destinationPath);
+            $image->move($destinationPath, $input['img_url']);
+            $product->update([
+                'image' => $input['img_url']
+            ]);
+        }
+        return $product->refresh();
     }
 }

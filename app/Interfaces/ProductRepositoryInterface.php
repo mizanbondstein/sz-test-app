@@ -4,8 +4,6 @@ namespace App\Interfaces;
 
 interface ProductRepositoryInterface
 {
-    public function list();
-    public function findById(int $productId);
-    public function create(array $details);
-    
+    public function list($params = null);
+    public function create($details);
 }
